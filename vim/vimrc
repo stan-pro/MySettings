@@ -27,6 +27,7 @@ if has('gui_running')
   set guioptions-=r                 " Don't show right scrollbar
   set lines=60 columns=120          " Window dimensions.
 else
+  set background=dark
   set paste  " For unexpected effect when pasting
 endif "end 'gui_running'
 
@@ -41,13 +42,8 @@ else
   compiler gcc
 endif "end 'win32'
 
-if has("unix")
-  let s:uname = system("uname")
-  if s:uname == "Darwin\n"
-    " Mac OS X Specific
-    set keymap=russian-jcukenmac	  "Russian language
-  endif
-endif
+" Russian language (Apple keyboard)
+set keymap=russian-jcukenmac
 
 " Use UTF-8 everywhere.
 set encoding=utf-8
