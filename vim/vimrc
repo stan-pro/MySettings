@@ -1,0 +1,220 @@
+" Must come first because it changes other options.
+set nocompatible
+
+" Pathogen
+filetype off
+call pathogen#helptags()
+call pathogen#runtime_append_all_bundles()
+filetype plugin indent on
+
+" Toggle the tasklist
+map <leader>td <Plug>TaskList
+
+" GUI settings
+if has('gui_running')
+  if has("gui_macvim")
+    set guifont=Menlo:h16            " Font family and font size.
+  elseif has("gui_gtk2")
+    set guifont=Inconsolata\ 12
+  elseif has("gui_win32")
+    set guifont=Consolas:h11:cANSI
+  endif "end 'gui_macvim'
+  
+
+  set antialias                     " MacVim: smooth fonts.
+  set guioptions=aAc               " Autoselect + use console dialogs
+  set guioptions-=T                 " Hide toolbar.
+  set guioptions-=r                 " Don't show right scrollbar
+  set lines=60 columns=120          " Window dimensions.
+else
+  set paste  " For unexpected effect when pasting
+endif "end 'gui_running'
+
+if has('win32')
+  set keymap=russian-jcukenwin	  "Russian language
+  source $VIMRUNTIME/mswin.vim
+  behave mswin
+  set makeprg=nmake
+  compiler msvc
+else
+  set makeprg=make
+  compiler gcc
+endif "end 'win32'
+
+if has("unix")
+  let s:uname = system("uname")
+  if s:uname == "Darwin\n"
+    " Mac OS X Specific
+    set keymap=russian-jcukenmac	  "Russian language
+  endif
+endif
+
+" Use UTF-8 everywhere.
+set encoding=utf-8
+
+" Encodings and filetypes order
+set ffs=unix,dos,mac
+set fencs=utf-8,cp1251,koi8-r,ucs-2,cp866
+
+" Ignore these files when completing
+set wildignore+=*.o,*.obj,.git,*.pyc
+set wildignore+=eggs/**
+set wildignore+=*.egg-info/**
+
+set grepprg=ack         " replace the default grep program with ack
+
+" Status Line Settings
+set statusline=[%n]            "buffer number
+set statusline+=[%t]       "tail of the filename
+set statusline+=[%{strlen(&fenc)?&fenc:'none'}, "file encoding
+set statusline+=%{&ff}] "file format
+set statusline+=%h      "help file flag
+set statusline+=%m      "modified flag
+set statusline+=%r      "read only flag
+set statusline+=%y      "filetype
+set statusline+=%=      "left/right separator
+
+set statusline+=%c,     "cursor column
+set statusline+=%l/%L   "cursor line/total lines
+set statusline+=\ %P    "percent through file
+" End Status Line Settings
+
+" a - terse messages (like [+] instead of [Modified]
+" t - truncate file names
+" I - no intro message when starting vim fileless
+" T - truncate long messages to avoid having to hit a key
+set shortmess=atTI
+
+set cmdheight=2
+
+set iminsert=0			  "English default
+set imsearch=0
+
+syntax enable                     " Turn on syntax highlighting.
+filetype plugin indent on         " Turn on file type detection.
+
+
+" For security reason
+" http://lists.alioth.debian.org/pipermail/pkg-vim-maintainers/2007-June/004020.html
+set modelines=0
+
+" Number of colors (for terminal)
+set t_Co=256
+
+" Theme
+colorscheme solarized
+
+" Change cursor color in (lang) mode
+highlight lCursor guifg=NONE guibg=Cyan
+
+" set the number of lines that are remembered
+set history=512
+
+" Fast terminal connection
+set ttyfast
+
+" Use relative line numbers
+set relativenumber
+
+" Use undo file <FILENAME>.un~
+set undofile
+
+" Yanks go on clipboard instead.
+set clipboard+=unnamed 
+
+" Show tab line only if there are at least two tab pages
+set showtabline=1
+
+" For long lines
+set wrap
+set textwidth=79
+set colorcolumn=85
+set formatoptions=qrn1
+
+
+set showcmd                       " Display incomplete commands.
+set showmode                      " Display the mode you're in.
+
+set backspace=indent,eol,start    " Intuitive backspacing.
+
+set hidden                        " Handle multiple buffers better.
+
+set wildmenu                      " Enhanced command line completion.
+set wildmode=list:longest         " Complete files like a shell.
+
+set ignorecase                    " Case-insensitive searching.
+set smartcase                     " But case-sensitive if expression contains a capital letter.
+
+set incsearch                     " Highlight matches as you type.
+set hlsearch                      " Highlight matches.
+
+
+set wrap                          " Turn on line wrapping.
+set scrolloff=3                   " Show 3 lines of context around the cursor.
+
+set title                         " Set the terminal's title
+
+set visualbell                    " No beeping.
+
+set noerrorbells		  "No noise
+
+set nobackup                      " Don't make a backup before overwriting a file.
+set nowritebackup                 " And again.
+set directory=$HOME/.vim/tmp//,.  " Keep swap files in one location
+
+set tabstop=2                    " Global tab width.
+set softtabstop=2
+set shiftwidth=2                 " And again, related.
+set expandtab                    " Use spaces instead of tabs
+set smarttab
+
+
+
+set autoindent
+set cindent
+set cinoptions=:s,ps,ts,cs
+
+
+set showmatch			"Show matching brackets
+set matchtime=5			"Bracket blinking
+
+set listchars=tab:·\ ,eol:¶,trail:·,extends:»,precedes:« " Unprintable chars mapping
+
+" Show $ at end of line and trailing space as ~
+
+set timeoutlen=250  " Time to wait after ESC (default causes an annoying delay)
+
+set laststatus=2                  " Show the status line all the time
+
+" Python
+au FileType python set omnifunc=pythoncomplete#Complete
+let g:SuperTabDefaultCompletionType = "context"
+
+if has("gui_running") 
+  highlight SpellBad term=underline gui=undercurl guisp=Orange 
+endif
+
+" Add the virtualenv's site-packages to vim path
+py << EOF
+import os.path
+import sys
+import vim
+if 'VIRTUAL_ENV' in os.environ:
+    project_base_dir = os.environ['VIRTUAL_ENV']
+    sys.path.insert(0, project_base_dir)
+    activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
+    execfile(activate_this, dict(__file__=activate_this))
+EOF
+
+" Ruby
+au FileType python set omnifunc=rubycomplete#Complete
+
+" JavaScript
+au FileType javascript set omnifunc=javascriptcomplete#CompleteJS
+
+" HTML
+au FileType html set omnifunc=htmlcomplete#CompleteTags
+
+" CSS
+au FileType css set omnifunc=csscomplete#CompleteCSS
+
