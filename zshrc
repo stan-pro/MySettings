@@ -16,7 +16,7 @@ export ZSH_THEME="blog3e"
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git ruby osx brew github svn python bundler)
+plugins=(git ruby osx brew github svn python bundler django)
 
 source $ZSH/oh-my-zsh.sh
 
