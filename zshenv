@@ -18,9 +18,11 @@ export PYTHONSTARTUP=$HOME/.pythonstartup
 
 
 # Python path
-# TODO Need to detect python version
-if [ -d $HOME/.local/lib/python2.7/site-packages ]; then
-  export PYTHONPATH=$HOME/.local/lib/python2.7/site-packages:$PYTHONPATH
+if command -v python &> /dev/null; then
+  local PYTHON_VERSION=`python -c'import sys; print "python%s" % (sys.version[:3])'`
+  if [ -d $HOME/.local/lib/$PYTHON_VERSION/site-packages ]; then
+    export PYTHONPATH=$HOME/.local/lib/$PYTHON_VERSION/site-packages
+  fi
 fi
 
 # homebrew
